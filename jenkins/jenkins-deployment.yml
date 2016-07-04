@@ -1,0 +1,111 @@
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: jenkins
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: jenkins
+      labels:
+        app: jenkins
+        release: stable
+    spec:
+      nodeSelector:
+        'actano.de/jenkins': 'true'
+      containers:
+        - name: jenkins
+          image: actanodockercloud/jenkins-next:rancher
+          imagePullPolicy: 'Always'
+          ports:
+            - name: http
+              containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: '/api/json'
+              port: 'http'
+            initialDelaySeconds: 15
+            timeoutSeconds: 5
+          volumeMounts:
+            - name: docker-sock
+              mountPath: /var/run/docker.sock
+              readOnly: true
+            - name: jenkins-state
+              mountPath: /var/jenkins_home
+            - name: jenkins-secrets
+              mountPath: /secrets
+          env:
+            - name: THROTTLE_COUCHBASE
+              valueFrom:
+                configMapKeyRef:
+                  name: 'jenkins'
+                  key: 'couchbase.throttle'
+            - name: JENKINS_VAR_couchbase__maxBucketCount
+              valueFrom:
+                configMapKeyRef:
+                  name: 'jenkins'
+                  key: 'couchbase.max.bucket.count'
+            - name: JENKINS_VAR_BROWSER_SCALE
+              valueFrom:
+                configMapKeyRef:
+                  name: 'jenkins'
+                  key: 'browser.scale'
+            - name: JENKINS_NUM_EXECUTORS
+              valueFrom:
+                configMapKeyRef:
+                  name: 'jenkins'
+                  key: 'jenkins.executors'
+            - name: JENKINS_EMAIL
+              valueFrom:
+                configMapKeyRef:
+                  name: 'jenkins'
+                  key: 'jenkins.email'
+            - name: JENKINS_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: 'jenkins'
+                  key: 'jenkins.url'
+            - name: JENKINS_VAR_COUCHBASE_VERSION
+              valueFrom:
+                configMapKeyRef:
+                  name: 'jenkins'
+                  key: 'couchbase.version'
+            - name: JENKINS_VAR_CHROME_VERSION
+              valueFrom:
+                configMapKeyRef:
+                  name: 'jenkins'
+                  key: 'chrome.version'
+            - name: JENKINS_VAR_FIREFOX_VERSION
+              valueFrom:
+                configMapKeyRef:
+                  name: 'jenkins'
+                  key: 'firefox.version'
+            - name: JENKINS_VAR_HTTPMOCK_VERSION
+              valueFrom:
+                configMapKeyRef:
+                  name: 'jenkins'
+                  key: 'httpmock.version'
+            - name: SLACK_TEAM_DOMAIN
+              valueFrom:
+                configMapKeyRef:
+                  name: 'jenkins'
+                  key: 'slack.team.domain'
+            - name: SLACK_ROOM
+              valueFrom:
+                configMapKeyRef:
+                  name: 'jenkins'
+                  key: 'slack.channel'
+            - name: SECRETS_MOUNT_POINT
+              value: '/secrets'
+            - name: DEPLOYMENT_TRIGGER
+              value: '1'
+      volumes:
+        - name: docker-sock
+          hostPath:
+            path: /var/run/docker.sock
+        - name: jenkins-state
+          persistentVolumeClaim:
+            claimName: jenkins-state
+        - name: jenkins-secrets
+          secret:
+            secretName: jenkins
