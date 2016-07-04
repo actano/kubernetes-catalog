@@ -31,8 +31,10 @@ spec:
             - name: docker-sock
               mountPath: /var/run/docker.sock
               readOnly: true
-            - name: jenkins-state
-              mountPath: /var/jenkins_home
+            - name: jenkins-jobs
+              mountPath: /var/jenkins_home/jobs
+            - name: jenkins-users
+              mountPath: /var/jenkins_home/users
             - name: jenkins-secrets
               mountPath: /secrets
           env:
@@ -104,9 +106,12 @@ spec:
         - name: docker-sock
           hostPath:
             path: /var/run/docker.sock
-        - name: jenkins-state
+        - name: jenkins-jobs
           persistentVolumeClaim:
-            claimName: jenkins-state
+            claimName: jenkins-jobs
+        - name: jenkins-users
+          persistentVolumeClaim:
+            claimName: jenkins-users
         - name: jenkins-secrets
           secret:
             secretName: jenkins

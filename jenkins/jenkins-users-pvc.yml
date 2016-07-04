@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: jenkins-state
+  name: jenkins-users
 spec:
   accessModes:
     - ReadWriteMany
   resources:
     requests:
-      storage: 50G
-  volumeName: jenkins-state
+      storage: 10G
+  volumeName: jenkins-users
