@@ -21,8 +21,7 @@ spec:
             - name: http
               containerPort: 8080
           readinessProbe:
-            httpGet:
-              path: '/api/json'
+            tcpSocket:
               port: 'http'
             initialDelaySeconds: 15
             timeoutSeconds: 5
