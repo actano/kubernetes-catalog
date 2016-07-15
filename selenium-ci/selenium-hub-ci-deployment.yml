@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: selenium-hub-ci
-          image: selenium/hub:2.47.1
+          image: selenium/hub:2.48.2
           ports:
             - containerPort: 4444
           livenessProbe:
