@@ -1,0 +1,32 @@
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: selenium-hub-ci
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      name: selenium-hub-ci
+      labels:
+        app: selenium-hub
+        environment: CI
+    spec:
+      containers:
+        - name: selenium-hub-ci
+          image: selenium/hub:2.47.1
+          ports:
+            - containerPort: 4444
+          livenessProbe:
+            httpGet:
+              path: /grid/console
+              port: 4444
+            initialDelaySeconds: 30
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /grid/console
+              port: 4444
+            initialDelaySeconds: 30
+            timeoutSeconds: 5
