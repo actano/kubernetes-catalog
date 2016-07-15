@@ -1,0 +1,31 @@
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: selenium-node-chrome
+spec:
+  replicas: 2
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      name: selenium-node-chrome
+      labels:
+        app: selenium-node-chrome
+        environment: CI
+    spec:
+      containers:
+        - name: selenium-node-chrome
+          image: selenium/node-chrome:2.47.1
+          env:
+            - name: SCREEN_WIDTH
+              value: '1920'
+            - name: SCREEN_HEIGHT
+              value: '1080'
+            - name: JAVA_OPTS
+              value: -Djava.security.egd=file:/dev/./urandom -Dwebdriver.chrome.args=--verbose
+            - name: DBUS_SESSION_BUS_ADDRESS
+              value: /dev/null
+            - name: HUB_PORT_4444_TCP_ADDR
+              value: selenium-hub-ci
+            - name: HUB_PORT_4444_TCP_PORT
+              value: '4444'

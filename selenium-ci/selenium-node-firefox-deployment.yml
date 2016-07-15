@@ -1,0 +1,31 @@
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: selenium-node-firefox
+spec:
+  replicas: 2
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      name: selenium-node-firefox
+      labels:
+        app: selenium-node-firefox
+        environment: CI
+    spec:
+      containers:
+        - name: selenium-node-firefox
+          image: selenium/node-firefox:2.48.2
+          env:
+            - name: SCREEN_WIDTH
+              value: '1920'
+            - name: SCREEN_HEIGHT
+              value: '1080'
+            - name: JAVA_OPTS
+              value: -Djava.security.egd=file:/dev/./urandom
+            - name: DBUS_SESSION_BUS_ADDRESS
+              value: /dev/null
+            - name: HUB_PORT_4444_TCP_ADDR
+              value: selenium-hub-ci
+            - name: HUB_PORT_4444_TCP_PORT
+              value: '4444'
