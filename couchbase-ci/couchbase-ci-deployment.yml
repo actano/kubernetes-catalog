@@ -1,0 +1,45 @@
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: couchbase-ci
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      name: couchbase-ci
+      labels:
+        app: couchbase
+        environment: test
+        topology: single-node
+    spec:
+      containers:
+        - name: couchbase-ci
+          image: couchbase:community-4.0.0
+          ports:
+            - containerPort: 8091
+              name: 'admin'
+            - containerPort: 8092
+              name: 'api'
+            - containerPort: 8093
+              name: 'query'
+          readinessProbe:
+            tcpSocket:
+              port: 'api'
+            initialDelaySeconds: 5
+            timeoutSeconds: 5
+          # k8s currently doesn't support setting ulimits via its API. Set it manually for now.
+          command:
+            - /bin/sh
+            - -c
+            - >
+              ulimit -n 40960 &&
+              ulimit -c unlimited &&
+              ulimit -l unlimited &&
+              ulimit -a &&
+              /entrypoint.sh couchbase-server
+          securityContext:
+            capabilities:
+              add:
+                - SYS_RESOURCE # required for setting ulimits

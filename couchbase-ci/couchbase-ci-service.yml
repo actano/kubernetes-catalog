@@ -1,0 +1,18 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: couchbase-ci
+spec:
+  ports:
+    - name: 'admin'
+      port: 8091
+      targetPort: 'admin'
+    - name: 'api'
+      port: 8092
+      targetPort: 'api'
+    - name: 'query'
+      port: 8093
+      targetPort: 'query'
+  selector:
+    app: couchbase
+    environment: test
