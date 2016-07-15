@@ -15,4 +15,4 @@ spec:
       targetPort: 'query'
   selector:
     app: couchbase
-    environment: test
+    environment: CI

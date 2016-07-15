@@ -11,7 +11,7 @@ spec:
       name: couchbase-ci
       labels:
         app: couchbase
-        environment: test
+        environment: CI
         topology: single-node
     spec:
       containers:
