@@ -7,15 +7,33 @@ metadata:
     environment: CI
 spec:
   ports:
-    - name: 'admin'
+    - name: 'web'
       port: 8091
-      targetPort: 'admin'
+      targetPort: 'web'
     - name: 'api'
       port: 8092
       targetPort: 'api'
-    - name: 'query'
+    - name: 'n1ql'
       port: 8093
-      targetPort: 'query'
+      targetPort: 'n1ql'
+    - name: 'smart_client_ssl'
+      port: 11207
+      targetPort: 'smart_client_ssl'
+    - name: 'smart_client'
+      port: 11210
+      targetPort: 'smart_client'
+    - name: 'bucket_legacy'
+      port: 11211
+      targetPort: 'bucket_legacy'
+    - name: 'rest_ssl'
+      port: 18091
+      targetPort: 'web_ssl'
+    - name: 'api_ssl'
+      port: 18092
+      targetPort: 'web_ssl'
+    - name: 'n1ql_ssl'
+      port: 18093
+      targetPort: 'n1ql_ssl'
   selector:
     app: couchbase
     environment: CI

@@ -19,11 +19,23 @@ spec:
           image: couchbase:community-4.0.0
           ports:
             - containerPort: 8091
-              name: 'admin'
+              name: 'web'
             - containerPort: 8092
               name: 'api'
             - containerPort: 8093
-              name: 'query'
+              name: 'n1ql'
+            - containerPort: 11207
+              name: 'smart_client_ssl'
+            - containerPort: 11210
+              name: 'smart_client'
+            - containerPort: 11211
+              name: 'bucket_legacy'
+            - containerPort: 18091
+              name: 'web_ssl'
+            - containerPort: 18092
+              name: 'api_ssl'
+            - containerPort: 18093
+              name: 'n1ql_ssl'
           readinessProbe:
             tcpSocket:
               port: 'api'
